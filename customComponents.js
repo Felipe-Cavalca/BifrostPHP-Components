@@ -1,5 +1,7 @@
 class customComponents {
 
+    #tagScript = document.currentScript;
+
     constructor() {
         let elements = this.#getElementsWithPrefix("c-");
         let pathComponents = this.#getUrl("/components/");
@@ -14,7 +16,7 @@ class customComponents {
     }
 
     #getUrl(url) {
-        let elem = document.querySelector("[src$='customComponents.js']");
+        let elem = this.#tagScript;
         let src = elem.src;
         let appPath = src.substring(0, src.lastIndexOf("/"));
         return appPath + url;
