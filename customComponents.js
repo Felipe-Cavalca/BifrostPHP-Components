@@ -5,10 +5,14 @@ class customComponents {
     #pathComponents;
 
     constructor(prefix = "c-", pathComponents = "/components/") {
-        this.#prefix = prefix;
-        this.#pathComponents = pathComponents;
-        let elements = this.#getElementsWithPrefix(prefix);
+        this.#prefix = this.#getData("prefix") ?? prefix;
+        this.#pathComponents = this.#getData("path") ?? pathComponents;
+        let elements = this.#getElementsWithPrefix(this.#prefix);
         this.#loadElements(elements);
+    }
+
+    #getData(data) {
+        return this.#tagScript.getAttribute(data);
     }
 
     #loadElements(elements) {
