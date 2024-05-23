@@ -1,25 +1,24 @@
 class customComponents {
 
     #tagScript = document.currentScript;
+    #prefix;
+    #pathComponents;
 
-    constructor() {
-        let elements = this.#getElementsWithPrefix("c-");
-        let pathComponents = this.#getUrl("/components/");
+    constructor(prefix = "c-", pathComponents = "/components/") {
+        this.#prefix = prefix;
+        this.#pathComponents = pathComponents;
+        let elements = this.#getElementsWithPrefix(prefix);
+        this.#loadElements(elements);
+    }
 
+    #loadElements(elements) {
         elements.forEach(element => {
-            let htmlUrl = pathComponents + element + ".html";
-            htmlUrl = htmlUrl.replaceAll("c-","");
+            let htmlUrl = this.#pathComponents + element + ".html";
+            htmlUrl = htmlUrl.replaceAll(this.#prefix, "");
             this.#request(htmlUrl).then(htmlComponent => {
                 this.#defineCustomElement(element, htmlComponent);
             })
         });
-    }
-
-    #getUrl(url) {
-        let elem = this.#tagScript;
-        let src = elem.src;
-        let appPath = src.substring(0, src.lastIndexOf("/"));
-        return appPath + url;
     }
 
     #getElementsWithPrefix(prefix) {
