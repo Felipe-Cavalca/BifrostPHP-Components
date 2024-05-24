@@ -33,7 +33,7 @@ Você pode personalizar o caminho e o prefixo dos componentes personalizados ao 
 Aqui está um exemplo de como você pode fazer isso:
 
 ```html
-<script path="/components" prefix="c-" src="customComponents.js"></script>
+<script path="/components" prefix="c-" src="caminho/para/o/arquivo/customComponents.js"></script>
 ```
 
 Neste exemplo, o atributo path define o caminho de onde o script vai listar os componentes. O atributo prefix define o prefixo que será usado para criar as tags dos componentes personalizados.
