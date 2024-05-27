@@ -1,0 +1,34 @@
+name: Minify JavaScript
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Minify JavaScript
+      run: |
+        TAG_NAME=$(basename $GITHUB_REF)
+        npx terser customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
+
+    - name: Commit and Push
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add dist/*
+        git commit -m "Minify JavaScript files" -a
+        git push
