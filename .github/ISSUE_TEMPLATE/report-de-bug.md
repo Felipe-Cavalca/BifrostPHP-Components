@@ -1,6 +1,6 @@
 ---
 name: Report de Bug
-about: Crie um relatório para nos ajudar a melhorar.
+about: Nos avise sobre um erro para que possamos corrigi-lo
 title: ''
 labels: Bug, Invalida
 assignees: ''
@@ -23,11 +23,6 @@ Uma descrição clara e concisa do que você esperava que acontecesse.
 
 **Capturas de Tela**
 Se aplicável, adicione capturas de tela para ajudar a explicar o problema.
-
-**Computador (por favor, forneça as seguintes informações):**
-
-- Navegador [ex: Chrome, Safari]
-- Versão [ex: 22]
 
 **Contexto Adicional**
 Adicione qualquer outro contexto sobre o problema aqui.
