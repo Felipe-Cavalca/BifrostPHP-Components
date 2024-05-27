@@ -12,8 +12,6 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-      with:
-        ref: ${{ github.head_ref }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v2
@@ -51,6 +49,9 @@ jobs:
       run: |
         TAG_NAME=$(basename $GITHUB_REF)
         npx terser customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
+
+    - name: Checkout main branch
+      run: git checkout main
 
     - name: Commit and Push
       run: |
