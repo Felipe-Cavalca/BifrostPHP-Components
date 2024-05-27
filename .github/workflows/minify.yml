@@ -61,4 +61,6 @@ jobs:
         git config --local user.name "GitHub Action"
         git add dist/*
         git commit -m "Minify JavaScript files" -a
-        git push
+        git push origin HEAD:main
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
