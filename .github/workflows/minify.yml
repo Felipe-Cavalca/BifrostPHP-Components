@@ -50,7 +50,7 @@ jobs:
     - name: Minify JavaScript
       run: |
         TAG_NAME=$(basename $GITHUB_REF)
-        npx terser customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
+        npx terser src/customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
 
     - name: Checkout main branch
       run: git checkout main
