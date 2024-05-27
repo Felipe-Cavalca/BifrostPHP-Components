@@ -10,7 +10,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: ${{ github.head_ref }}
 
     - name: Setup Node.js
       uses: actions/setup-node@v2
@@ -35,7 +38,7 @@ jobs:
           }
         }' > package.json
 
-    - name: Install Dependencies
+    - name: Install Dependencies npm
       run: npm install
 
     - name: Install Dependencies
@@ -48,9 +51,6 @@ jobs:
       run: |
         TAG_NAME=$(basename $GITHUB_REF)
         npx terser customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
-
-    - name: Checkout correct branch
-      run: git checkout ${GITHUB_REF#refs/heads/}
 
     - name: Commit and Push
       run: |
