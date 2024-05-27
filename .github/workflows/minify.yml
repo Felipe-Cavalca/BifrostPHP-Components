@@ -36,6 +36,9 @@ jobs:
         }' > package.json
 
     - name: Install Dependencies
+      run: npm install
+
+    - name: Install Dependencies
       run: npm ci
 
     - name: Minify JavaScript
