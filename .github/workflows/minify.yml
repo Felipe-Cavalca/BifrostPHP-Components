@@ -49,6 +49,9 @@ jobs:
         TAG_NAME=$(basename $GITHUB_REF)
         npx terser customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
 
+    - name: Checkout correct branch
+      run: git checkout ${GITHUB_REF#refs/heads/}
+
     - name: Commit and Push
       run: |
         git config --local user.email "action@github.com"
