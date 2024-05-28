@@ -6,7 +6,8 @@ on:
       - closed
 
 jobs:
-  create_tag_and_draft_release:
+
+  install_dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -19,19 +20,22 @@ jobs:
         with:
           node-version: '14'
 
-      - name: Change directory
-        run: cd .github/scripts
-
       - name: Install dependencies
+        working-directory: .github/scripts
         run: npm install
 
+  create_tag_and_draft_release:
+    needs: install_dependencies
+    runs-on: ubuntu-latest
+    steps:
       - name: Run script
+        working-directory: .github/scripts
         run: node create_release.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_release:
-    needs: create_tag_and_draft_release
+    needs: [create_tag_and_draft_release, install_dependencies]
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
