@@ -6,7 +6,7 @@ on:
       - closed
 
 jobs:
-  criando-tag-e-pre-release:
+  create_tag_and_draft_release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -49,7 +49,7 @@ jobs:
             }
 
   publish_release:
-    needs: build-min-js
+    needs: create_tag_and_draft_release
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
@@ -58,7 +58,7 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const { owner, repo } = context.repo
-            const releaseId = ${{ needs.criando-tag-e-pre-release.outputs.create_release }}
+            const releaseId = ${{ needs.create_tag_and_draft_release.outputs.create_release }}
             await github.repos.updateRelease({
               owner,
               repo,
@@ -67,7 +67,7 @@ jobs:
             })
 
   build-min-js:
-    needs: criando-tag-e-pre-release
+    needs: publish_release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
