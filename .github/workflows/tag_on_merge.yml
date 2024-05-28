@@ -14,39 +14,21 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create Tag and Draft Release
-        id: create_release
-        uses: actions/github-script@v3
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2
         with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            if (context.payload.pull_request.merged) {
-              const { owner, repo } = context.repo
-              const lastTag = (await github.repos.listTags({
-                owner,
-                repo,
-              })).data.map(tag => tag.name).sort().pop()
-              const baseString = lastTag.match(/[\d.]+$/)[0]
-              const prefix = lastTag.replace(baseString, '')
-              const parts = baseString.split('.').map(Number);
-              parts[2] += 1; // Incrementa a parte menor da versão
-              const newTag = `${prefix}${parts.join('.')}`;
-              const tagRef = await github.git.createRef({
-                owner,
-                repo,
-                ref: `refs/tags/${newTag}`,
-                sha: context.payload.pull_request.merge_commit_sha,
-              })
-              const release = await github.repos.createRelease({
-                owner,
-                repo,
-                tag_name: newTag,
-                name: newTag,
-                draft: true, // Cria a release como rascunho
-                prerelease: false,
-              })
-              return release.data.id; // Retorna o ID da release
-            }
+          node-version: '14'
+
+      - name: Change directory
+        run: cd .github/scripts
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run script
+        run: node create_release.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_release:
     needs: create_tag_and_draft_release
