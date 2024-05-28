@@ -14,7 +14,8 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create Tag and Release
+      - name: Create Tag and Draft Release
+        id: create_release
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
@@ -36,17 +37,19 @@ jobs:
                 ref: `refs/tags/${newTag}`,
                 sha: context.payload.pull_request.merge_commit_sha,
               })
-              await github.repos.createRelease({
+              const release = await github.repos.createRelease({
                 owner,
                 repo,
                 tag_name: newTag,
                 name: newTag,
-                draft: false,
-                prerelease: true,
+                draft: true, // Cria a release como rascunho
+                prerelease: false,
               })
+              return release.data.id; // Retorna o ID da release
             }
 
   build-min-js:
+    needs: criando-tag-e-pre-release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -119,3 +122,21 @@ jobs:
           asset_content_type: application/javascript
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
+
+  publish_release:
+    needs: build-min-js
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish Release
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { owner, repo } = context.repo
+            const releaseId = ${{ needs.criando-tag-e-pre-release.outputs.create_release }}
+            await github.repos.updateRelease({
+              owner,
+              repo,
+              release_id: releaseId,
+              draft: false, // Remove o status de rascunho
+            })
