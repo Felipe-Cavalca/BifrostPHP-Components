@@ -57,7 +57,8 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const fs = require('fs');
-            const newTag = fs.readFileSync('newtag.txt', 'utf8').trim();
+            const newTagLine = fs.readFileSync('newtag.txt', 'utf8').trim();
+            const newTag = newTagLine.split('=')[1];
             const { owner, repo } = context.repo
             let release
             try {
