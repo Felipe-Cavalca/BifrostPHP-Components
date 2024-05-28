@@ -14,82 +14,33 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create Tag
-        run: |
-          if [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
-            LAST_TAG=$(git tag | sort -V | tail -n 1)
-            echo "LAST_TAG=$LAST_TAG"
-            BASE_STRING=$(echo $LAST_TAG | grep -oP '\d+$')
-            PREFIX=$(echo $LAST_TAG | grep -oP '^.+(?=\d+$)')
-            NEW_TAG="$PREFIX$((BASE_STRING + 1))"
-            echo "NEW_TAG=$NEW_TAG"
-            echo "NEW_TAG=$NEW_TAG" > newtag.txt
-            git tag $NEW_TAG ${{ github.event.pull_request.merge_commit_sha }}
-            git push --set-upstream https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} --tags
-          fi
-
-      - name: Archive production artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: newtag
-          path: newtag.txt
-
-      - name: Wait for tag to be published
-        run: sleep 30
-
-      - name: Draft release
-        uses: release-drafter/release-drafter@v5
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  publicando-pre-release:
-    needs: criando-tag-e-pre-release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download newtag
-        uses: actions/download-artifact@v2
-        with:
-          name: newtag
-
-      - name: Verificar se a tag existe
+      - name: Create Tag and Release
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            const fs = require('fs');
-            const newTagLine = fs.readFileSync('newtag.txt', 'utf8').trim();
-            const newTag = newTagLine.split('=')[1];
-            const { owner, repo } = context.repo
-            let release
-            try {
-              release = await github.repos.getReleaseByTag({
+            if (context.payload.pull_request.merged) {
+              const { owner, repo } = context.repo
+              const lastTag = (await github.git.listRefs({
                 owner,
                 repo,
-                tag: newTag,
+                ref: 'tags',
+              })).data.map(ref => ref.ref.replace('refs/tags/', '')).sort().pop()
+              const baseString = lastTag.match(/\d+$/)[0]
+              const prefix = lastTag.replace(baseString, '')
+              const newTag = `${prefix}${parseInt(baseString) + 1}`
+              const tagRef = await github.git.createRef({
+                owner,
+                repo,
+                ref: `refs/tags/${newTag}`,
+                sha: context.payload.pull_request.merge_commit_sha,
               })
-            } catch (error) {
-              if (error.status === 404) {
-                console.log(`Tag ${newTag} ainda não está disponível. Tentando novamente em 30 segundos...`)
-                await new Promise(resolve => setTimeout(resolve, 30000))
-                release = await github.repos.getReleaseByTag({
-                  owner,
-                  repo,
-                  tag: newTag,
-                })
-              } else {
-                throw error
-              }
+              await github.repos.createRelease({
+                owner,
+                repo,
+                tag_name: newTag,
+                name: newTag,
+                draft: false,
+                prerelease: true,
+              })
             }
-
-            if (!release) {
-              console.log(`Nenhuma release encontrada para a tag ${newTag}`)
-              return
-            }
-
-            await github.repos.updateRelease({
-              owner,
-              repo,
-              release_id: release.data.id,
-              draft: false,
-              prerelease: true,
-            })
