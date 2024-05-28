@@ -6,7 +6,7 @@ on:
       - closed
 
 jobs:
-  - criando-tag-e-pre-release:
+  criando-tag-e-pre-release:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -46,7 +46,7 @@ jobs:
               })
             }
 
-  - build-min-js:
+  build-min-js:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
