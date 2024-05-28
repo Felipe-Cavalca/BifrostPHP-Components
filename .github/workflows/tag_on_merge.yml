@@ -32,6 +32,7 @@ jobs:
         uses: release-drafter/release-drafter@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   publicando-pre-release:
     needs: criando-tag-e-pre-release
     runs-on: ubuntu-latest
@@ -42,20 +43,22 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const { owner, repo } = context.repo
-            const draftRelease = await github.repos.listReleases({
+            const newTag = process.env.NEW_TAG
+            const release = await github.repos.getReleaseByTag({
               owner,
               repo,
-            }).then(releases => releases.data.find(release => release.draft))
+              tag: newTag,
+            })
 
-            if (!draftRelease) {
-              console.log('No draft release found')
+            if (!release) {
+              console.log(`No release found for tag ${newTag}`)
               return
             }
 
             await github.repos.updateRelease({
               owner,
               repo,
-              release_id: draftRelease.id,
+              release_id: release.data.id,
               draft: false,
               prerelease: true,
             })
