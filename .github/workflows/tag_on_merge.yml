@@ -21,11 +21,10 @@ jobs:
           script: |
             if (context.payload.pull_request.merged) {
               const { owner, repo } = context.repo
-              const lastTag = (await github.git.listRefs({
+              const lastTag = (await github.repos.listTags({
                 owner,
                 repo,
-                ref: 'tags',
-              })).data.map(ref => ref.ref.replace('refs/tags/', '')).sort().pop()
+              })).data.map(tag => tag.name).sort().pop()
               const baseString = lastTag.match(/\d+$/)[0]
               const prefix = lastTag.replace(baseString, '')
               const newTag = `${prefix}${parseInt(baseString) + 1}`
