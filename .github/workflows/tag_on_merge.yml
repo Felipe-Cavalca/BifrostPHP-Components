@@ -16,6 +16,8 @@ jobs:
       - name: Setup GitHub CLI
         run: |
           gh extension install actions/gh-extension
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Tag
         run: |
           if [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
@@ -31,4 +33,4 @@ jobs:
         run: |
           gh release create ${{ env.NEW_TAG }} --title "Release ${{ env.NEW_TAG }}" --notes "Pre-release for ${{ env.NEW_TAG }}" --prerelease
         env:
-          GH_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
