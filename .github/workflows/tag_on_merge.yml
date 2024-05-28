@@ -1,0 +1,33 @@
+name: Tag on merge
+
+on:
+  pull_request:
+    types:
+      - closed
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Create Tag
+        run: |
+          if [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
+            LAST_TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+            BASE_STRING=$(echo $LAST_TAG | grep -oP '\d+$')
+            PREFIX=$(echo $LAST_TAG | grep -oP '^.+(?=\d+$)')
+            NEW_TAG="$PREFIX$((BASE_STRING + 1))"
+            git tag $NEW_TAG ${{ github.event.pull_request.merge_commit_sha }}
+            git push origin --tags
+          fi
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+          release_name: Release ${{ env.NEW_TAG }}
+          prerelease: true
