@@ -45,3 +45,78 @@ jobs:
                 prerelease: false,
               })
             }
+
+   build-min-js:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Create package.json
+      run: |
+        echo '{
+          "name": "my-project",
+          "version": "1.0.0",
+          "description": "",
+          "main": "index.js",
+          "scripts": {
+            "test": "echo \"Error: no test specified\" && exit 1"
+          },
+          "keywords": [],
+          "author": "",
+          "license": "ISC",
+          "dependencies": {
+            "terser": "^5.7.2"
+          }
+        }' > package.json
+
+    - name: Install Dependencies npm
+      run: npm install
+
+    - name: Install Dependencies
+      run: npm ci
+
+    - name: Create dist directory
+      run: mkdir -p dist
+
+    - name: Minify JavaScript
+      run: |
+        TAG_NAME=$(basename $GITHUB_REF)
+        npx terser src/customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
+
+    - name: Checkout main branch
+      run: git checkout main
+
+    - name: Commit and Push
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add dist/*
+        git commit -m "Minify JavaScript files" -a
+        git push origin HEAD:main
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
+
+    - name: Get Release ID
+      id: get_release
+      run: |
+        RELEASE_ID=$(curl --silent "https://api.github.com/repos/${{ github.repository }}/releases/latest" -H "Authorization: Bearer ${{ secrets.TOKEN_ACTIONS }}" | jq -r '.id')
+        echo "RELEASE_ID=$RELEASE_ID" >> $GITHUB_ENV
+
+    - name: Upload Release Asset
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}/assets{?name,label}
+        asset_path: dist/customComponents-${{ github.ref_name }}.min.js
+        asset_name: customComponents-${{ github.ref_name }}.min.js
+        asset_content_type: application/javascript
+      env:
+        GITHUB_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
