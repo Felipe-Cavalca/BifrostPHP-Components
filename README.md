@@ -41,3 +41,9 @@ Neste exemplo, o atributo path define o caminho de onde o script vai listar os c
 Por exemplo, se você definir o prefixo como `v-`, você usaria a tag `<v-navbar></v-navbar>` para usar o componente navbar.html.
 
 Você pode definir o prefixo como qualquer string que desejar, desde que seja compatível com a sintaxe de tags HTML.
+
+## Lançamentos
+
+Sempre que um Pull Request é aprovado e mesclado, uma nova pré-lançamento é automaticamente criada pelo nosso fluxo de trabalho do GitHub Actions. Isso nos permite testar as novas alterações em um ambiente de pré-produção antes de lançá-las oficialmente.
+
+As versões de lançamento oficial, no entanto, são criadas manualmente. Isso nos dá a oportunidade de garantir que tudo esteja funcionando como esperado no ambiente de pré-lançamento antes de tornar as alterações disponíveis para todos os usuários.
