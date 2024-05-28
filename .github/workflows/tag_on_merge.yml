@@ -24,8 +24,7 @@ jobs:
             git tag $NEW_TAG ${{ github.event.pull_request.merge_commit_sha }}
             git push origin --tags
           fi
-      - name: Create Release
-        run: |
-          gh release create ${{ env.NEW_TAG }} --title "Release ${{ env.NEW_TAG }}" --notes "Pre-release for ${{ env.NEW_TAG }}" --prerelease
+      - name: Draft release
+        uses: release-drafter/release-drafter@v5
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
