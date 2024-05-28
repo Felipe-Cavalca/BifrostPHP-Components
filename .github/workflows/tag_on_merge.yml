@@ -28,3 +28,27 @@ jobs:
         uses: release-drafter/release-drafter@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish draft as pre-release
+        uses: actions/github-script@v3
+        with:
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            const { owner, repo } = context.repo
+            const draftRelease = await github.repos.listReleases({
+              owner,
+              repo,
+            }).then(releases => releases.data.find(release => release.draft))
+
+            if (!draftRelease) {
+              console.log('No draft release found')
+              return
+            }
+
+            await github.repos.updateRelease({
+              owner,
+              repo,
+              release_id: draftRelease.id,
+              draft: false,
+              prerelease: true,
+            })
