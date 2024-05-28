@@ -46,43 +46,9 @@ jobs:
           RELEASE_ID: ${{ needs.create_tag_and_draft_release.outputs.create_release }}
 
   build-min-js:
-    needs: publish_release
+    needs: [publish_release, install_dependencies]
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '14'
-
-      - name: Create package.json
-        run: |
-          echo '{
-            "name": "my-project",
-            "version": "1.0.0",
-            "description": "",
-            "main": "index.js",
-            "scripts": {
-              "test": "echo \"Error: no test specified\" && exit 1"
-            },
-            "keywords": [],
-            "author": "",
-            "license": "ISC",
-            "dependencies": {
-              "terser": "^5.7.2"
-            }
-          }' > package.json
-
-      - name: Install Dependencies npm
-        run: npm install
-
-      - name: Install Dependencies
-        run: npm ci
-
       - name: Create dist directory
         run: mkdir -p dist
 
