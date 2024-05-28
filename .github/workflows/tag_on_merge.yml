@@ -26,6 +26,6 @@ jobs:
           fi
       - name: Create Release
         run: |
-          gh release create ${{ env.NEW_TAG }} --title "Release ${{ env.NEW_TAG }}" --notes "Pre-release for ${{ env.NEW_TAG }}" --prerelease
+          gh release create ${{ env.NEW_TAG }} --title "${{ env.NEW_TAG }}" --notes "Pre-release for ${{ env.NEW_TAG }}" --prerelease
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
