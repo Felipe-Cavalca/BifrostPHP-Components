@@ -15,37 +15,21 @@ jobs:
           fetch-depth: 0
 
       - name: Create Tag and Release
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            if (context.payload.pull_request.merged) {
-              const { owner, repo } = context.repo
-              const lastTag = (await github.repos.listTags({
-                owner,
-                repo,
-              })).data.map(tag => tag.name).sort().pop()
-              const baseString = lastTag.match(/[\d.]+$/)[0]
-              const prefix = lastTag.replace(baseString, '')
-              const parts = baseString.split('.').map(Number);
-              parts[2] += 1; // Incrementa a parte menor da versão
-              const newTag = `${prefix}${parts.join('.')}`;
-              const tagRef = await github.git.createRef({
-                owner,
-                repo,
-                ref: `refs/tags/${newTag}`,
-                sha: context.payload.pull_request.merge_commit_sha,
-              })
-              await github.repos.createRelease({
-                owner,
-                repo,
-                tag_name: newTag,
-                name: newTag,
-                draft: false,
-                prerelease: true,
-              })
-            }
+        id: create_tag
+        run: |
+          if [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
+            lastTag=$(git describe --tags `git rev-list --tags --max-count=1`)
+            baseString=$(echo $lastTag | grep -o '[\d.]\+$')
+            prefix=$(echo $lastTag | sed "s/$baseString//")
+            parts=($(echo $baseString | tr '.' ' '))
+            parts[2]=$((parts[2]+1))
+            newTag="${prefix}${parts[0]}.${parts[1]}.${parts[2]}"
+            git tag $newTag ${{ github.event.pull_request.merge_commit_sha }}
+            echo "::set-output name=newTag::$newTag"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Tag
         run: |
-          git push origin ${newTag}
+          git push origin ${{ steps.create_tag.outputs.newTag }}
