@@ -25,9 +25,11 @@ jobs:
                 owner,
                 repo,
               })).data.map(tag => tag.name).sort().pop()
+              echo `Last tag: ${lastTag}`
               const baseString = lastTag.match(/\d+$/)[0]
               const prefix = lastTag.replace(baseString, '')
               const newTag = `${prefix}${parseInt(baseString) + 1}`
+              echo `New tag: ${newTag}`
               const tagRef = await github.git.createRef({
                 owner,
                 repo,
