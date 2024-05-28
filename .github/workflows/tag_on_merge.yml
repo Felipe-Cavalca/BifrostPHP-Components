@@ -27,7 +27,9 @@ jobs:
               })).data.map(tag => tag.name).sort().pop()
               const baseString = lastTag.match(/\d+$/)[0]
               const prefix = lastTag.replace(baseString, '')
-              const newTag = `${prefix}${parseInt(baseString) + 1}`
+              const parts = baseString.split('.').map(Number);
+              parts[2] += 1; // Incrementa a parte menor da versão
+              const newTag = `${prefix}${parts.join('.')}`;
               const tagRef = await github.git.createRef({
                 owner,
                 repo,
@@ -43,3 +45,7 @@ jobs:
                 prerelease: true,
               })
             }
+
+      - name: Push Tag
+        run: |
+          git push origin ${newTag}
