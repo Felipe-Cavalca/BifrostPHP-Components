@@ -23,3 +23,11 @@ jobs:
             git tag $NEW_TAG ${{ github.event.pull_request.merge_commit_sha }}
             git push origin --tags
           fi
+      - name: Create Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
+        with:
+          tag_name: ${{ env.NEW_TAG }}
+          release_name: Release ${{ env.NEW_TAG }}
+          prerelease: true
