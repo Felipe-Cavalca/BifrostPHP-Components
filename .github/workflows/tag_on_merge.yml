@@ -45,7 +45,3 @@ jobs:
                 prerelease: true,
               })
             }
-
-      - name: Push Tag
-        run: |
-          git push origin ${newTag}
