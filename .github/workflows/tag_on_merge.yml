@@ -45,9 +45,8 @@ jobs:
                 draft: true, // Cria a release como rascunho
                 prerelease: false,
               })
-              return release.data.id; // Retorna o ID da release
+              console.log(`::set-output name=release::${release.data.id}`); // Define o ID da release como um output
             }
-
   publish_release:
     needs: create_tag_and_draft_release
     runs-on: ubuntu-latest
@@ -58,14 +57,13 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const { owner, repo } = context.repo
-            const releaseId = ${{ needs.create_tag_and_draft_release.outputs.create_release }}
+            const releaseId = ${{ needs.create_tag_and_draft_release.outputs.release }} // Use o output 'release' aqui
             await github.repos.updateRelease({
               owner,
               repo,
               release_id: releaseId,
               draft: false, // Remove o status de rascunho
             })
-
   build-min-js:
     needs: publish_release
     runs-on: ubuntu-latest
@@ -97,7 +95,6 @@ jobs:
               "terser": "^5.7.2"
             }
           }' > package.json
-
       - name: Install Dependencies npm
         run: npm install
 
@@ -111,7 +108,6 @@ jobs:
         run: |
           TAG_NAME=$(basename $GITHUB_REF)
           npx terser src/customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
-
       - name: Checkout main branch
         run: git checkout main
 
@@ -130,7 +126,6 @@ jobs:
         run: |
           RELEASE_ID=$(curl --silent "https://api.github.com/repos/${{ github.repository }}/releases/latest" -H "Authorization: Bearer ${{ secrets.TOKEN_ACTIONS }}" | jq -r '.id')
           echo "RELEASE_ID=$RELEASE_ID" >> $GITHUB_ENV
-
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         with:
