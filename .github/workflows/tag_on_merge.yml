@@ -25,7 +25,7 @@ jobs:
                 owner,
                 repo,
               })).data.map(tag => tag.name).sort().pop()
-              const baseString = lastTag.match(/\d+$/)[0]
+              const baseString = lastTag.match(/[\d.]+$/)[0]
               const prefix = lastTag.replace(baseString, '')
               const parts = baseString.split('.').map(Number);
               parts[2] += 1; // Incrementa a parte menor da versão
