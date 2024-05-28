@@ -14,7 +14,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create Tag and Draft Release
+      - name: Create Draft Release
         id: create_release
         uses: actions/github-script@v3
         with:
@@ -45,8 +45,8 @@ jobs:
                 draft: true, // Cria a release como rascunho
                 prerelease: false,
               })
-              console.log(`::set-output name=release::${release.data.id}`); // Define o ID da release como um output
             }
+
   publish_release:
     needs: create_tag_and_draft_release
     runs-on: ubuntu-latest
@@ -57,13 +57,20 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const { owner, repo } = context.repo
-            const releaseId = ${{ needs.create_tag_and_draft_release.outputs.release }} // Use o output 'release' aqui
-            await github.repos.updateRelease({
+            const releases = await github.repos.listReleases({
               owner,
               repo,
-              release_id: releaseId,
-              draft: false, // Remove o status de rascunho
             })
+            const draftRelease = releases.data.find(release => release.draft) // Encontra a release mais recente que é um rascunho
+            if (draftRelease) {
+              await github.repos.updateRelease({
+                owner,
+                repo,
+                release_id: draftRelease.id,
+                draft: false, // Remove o status de rascunho
+              })
+            }
+
   build-min-js:
     needs: publish_release
     runs-on: ubuntu-latest
