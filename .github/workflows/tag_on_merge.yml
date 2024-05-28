@@ -13,11 +13,6 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Setup GitHub CLI
-        run: |
-          gh extension install actions/gh-extension
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Create Tag
         run: |
           if [[ "${{ github.event.pull_request.merged }}" == "true" ]]; then
