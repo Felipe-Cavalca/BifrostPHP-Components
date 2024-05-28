@@ -28,7 +28,10 @@ jobs:
         uses: release-drafter/release-drafter@v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
+  publicando-pre-release:
+    needs: criando-tag-e-pre-release
+    runs-on: ubuntu-latest
+    steps:
       - name: Publish draft as pre-release
         uses: actions/github-script@v3
         with:
