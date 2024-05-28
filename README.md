@@ -49,3 +49,5 @@ Sempre que um Pull Request é aprovado e mesclado, uma nova pré-lançamento é 
 As versões de lançamento oficial, no entanto, são criadas manualmente. Isso nos dá a oportunidade de garantir que tudo esteja funcionando como esperado no ambiente de pré-lançamento antes de tornar as alterações disponíveis para todos os usuários.
 
 Ao clonar o repositorio verifique as actions
+
+teste
