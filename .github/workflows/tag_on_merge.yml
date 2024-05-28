@@ -39,18 +39,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const { owner, repo } = context.repo
-            const releaseId = ${{ needs.create_tag_and_draft_release.outputs.create_release }}
-            await github.repos.updateRelease({
-              owner,
-              repo,
-              release_id: releaseId,
-              draft: false, // Remove o status de rascunho
-            })
+        working-directory: .github/scripts
+        run: node publish_release.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_ID: ${{ needs.create_tag_and_draft_release.outputs.create_release }}
 
   build-min-js:
     needs: publish_release
