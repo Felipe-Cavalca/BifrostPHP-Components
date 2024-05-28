@@ -23,13 +23,19 @@ jobs:
             PREFIX=$(echo $LAST_TAG | grep -oP '^.+(?=\d+$)')
             NEW_TAG="$PREFIX$((BASE_STRING + 1))"
             echo "NEW_TAG=$NEW_TAG"
-            echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
+            echo "NEW_TAG=$NEW_TAG" > newtag.txt
             git tag $NEW_TAG ${{ github.event.pull_request.merge_commit_sha }}
             git push --set-upstream https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} --tags
           fi
 
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: newtag
+          path: newtag.txt
+
       - name: Wait for tag to be published
-        run: sleep 45
+        run: sleep 30
 
       - name: Draft release
         uses: release-drafter/release-drafter@v5
@@ -40,13 +46,19 @@ jobs:
     needs: criando-tag-e-pre-release
     runs-on: ubuntu-latest
     steps:
+      - name: Download newtag
+        uses: actions/download-artifact@v2
+        with:
+          name: newtag
+
       - name: Verificar se a tag existe
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            const fs = require('fs');
+            const newTag = fs.readFileSync('newtag.txt', 'utf8').trim();
             const { owner, repo } = context.repo
-            const newTag = process.env.NEW_TAG
             let release
             try {
               release = await github.repos.getReleaseByTag({
