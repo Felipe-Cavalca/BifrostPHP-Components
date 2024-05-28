@@ -42,7 +42,7 @@ jobs:
                 tag_name: newTag,
                 name: newTag,
                 draft: false,
-                prerelease: false,
+                prerelease: true,
               })
             }
 
