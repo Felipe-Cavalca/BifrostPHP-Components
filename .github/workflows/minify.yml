@@ -74,7 +74,7 @@ jobs:
     - name: Upload Release Asset
       uses: actions/upload-release-asset@v1
       with:
-        upload_url: https://api.github.com/repos/${{ github.repository }}/releases/${{ steps.get_release.outputs.release_id }}
+        upload_url: https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}/assets{?name,label}
         asset_path: dist/customComponents-${{ github.ref_name }}.min.js
         asset_name: customComponents-${{ github.ref_name }}.min.js
         asset_content_type: application/javascript
