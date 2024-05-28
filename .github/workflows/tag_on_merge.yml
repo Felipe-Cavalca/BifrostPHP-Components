@@ -53,9 +53,10 @@ jobs:
         run: mkdir -p dist
 
       - name: Minify JavaScript
+        working-directory: .github/scripts
         run: |
           TAG_NAME=$(basename $GITHUB_REF)
-          npx terser src/customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
+          npx terser ../../src/customComponents.js -o ../../dist/customComponents-${TAG_NAME}.min.js
 
       - name: Checkout main branch
         run: git checkout main
