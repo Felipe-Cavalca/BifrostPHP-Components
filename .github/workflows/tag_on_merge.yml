@@ -6,7 +6,8 @@ on:
       - closed
 
 jobs:
-  create_tag_and_draft_release:
+
+  install_dependencies:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -14,100 +15,40 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create Draft Release
-        id: create_release
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            if (context.payload.pull_request.merged) {
-              const { owner, repo } = context.repo
-              const lastTag = (await github.repos.listTags({
-                owner,
-                repo,
-              })).data.map(tag => tag.name).sort().pop()
-              const baseString = lastTag.match(/[\d.]+$/)[0]
-              const prefix = lastTag.replace(baseString, '')
-              const parts = baseString.split('.').map(Number);
-              parts[2] += 1; // Incrementa a parte menor da versão
-              const newTag = `${prefix}${parts.join('.')}`;
-              const tagRef = await github.git.createRef({
-                owner,
-                repo,
-                ref: `refs/tags/${newTag}`,
-                sha: context.payload.pull_request.merge_commit_sha,
-              })
-              const release = await github.repos.createRelease({
-                owner,
-                repo,
-                tag_name: newTag,
-                name: newTag,
-                draft: true, // Cria a release como rascunho
-                prerelease: false,
-              })
-            }
-
-  publish_release:
-    needs: create_tag_and_draft_release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Publish Release
-        uses: actions/github-script@v3
-        with:
-          github-token: ${{secrets.GITHUB_TOKEN}}
-          script: |
-            const { owner, repo } = context.repo
-            const releases = await github.repos.listReleases({
-              owner,
-              repo,
-            })
-            const draftRelease = releases.data.find(release => release.draft) // Encontra a release mais recente que é um rascunho
-            if (draftRelease) {
-              await github.repos.updateRelease({
-                owner,
-                repo,
-                release_id: draftRelease.id,
-                draft: false, // Remove o status de rascunho
-              })
-            }
-
-  build-min-js:
-    needs: publish_release
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-
-      - name: Setup Node.js
+      - name: Setup Node.js environment
         uses: actions/setup-node@v2
         with:
           node-version: '14'
 
-      - name: Create package.json
-        run: |
-          echo '{
-            "name": "my-project",
-            "version": "1.0.0",
-            "description": "",
-            "main": "index.js",
-            "scripts": {
-              "test": "echo \"Error: no test specified\" && exit 1"
-            },
-            "keywords": [],
-            "author": "",
-            "license": "ISC",
-            "dependencies": {
-              "terser": "^5.7.2"
-            }
-          }' > package.json
-      - name: Install Dependencies npm
+      - name: Install dependencies
+        working-directory: .github/scripts
         run: npm install
 
-      - name: Install Dependencies
-        run: npm ci
+  create_tag_and_draft_release:
+    needs: install_dependencies
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run script
+        working-directory: .github/scripts
+        run: node create_release.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+  publish_release:
+    needs: [create_tag_and_draft_release, install_dependencies]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Publish Release
+        working-directory: .github/scripts
+        run: node publish_release.js
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_ID: ${{ needs.create_tag_and_draft_release.outputs.create_release }}
+
+  build-min-js:
+    needs: [publish_release, install_dependencies]
+    runs-on: ubuntu-latest
+    steps:
       - name: Create dist directory
         run: mkdir -p dist
 
@@ -118,8 +59,10 @@ jobs:
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
 
       - name: Minify JavaScript
+        working-directory: .github/scripts
         run: |
-          npx terser src/customComponents.js -o dist/customComponents-${{ env.TAG_NAME }}.min.js
+          TAG_NAME=$(basename $GITHUB_REF)
+          npx terser ../../src/customComponents.js -o ../../dist/customComponents-${TAG_NAME}.min.js
 
       - name: Checkout main branch
         run: git checkout main
