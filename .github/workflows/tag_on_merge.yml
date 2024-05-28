@@ -14,7 +14,7 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Create Tag and Draft Release
+      - name: Create Draft Release
         id: create_release
         uses: actions/github-script@v3
         with:
@@ -45,7 +45,6 @@ jobs:
                 draft: true, // Cria a release como rascunho
                 prerelease: false,
               })
-              return release.data.id; // Retorna o ID da release
             }
 
   publish_release:
@@ -58,13 +57,19 @@ jobs:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const { owner, repo } = context.repo
-            const releaseId = ${{ needs.create_tag_and_draft_release.outputs.create_release }}
-            await github.repos.updateRelease({
+            const releases = await github.repos.listReleases({
               owner,
               repo,
-              release_id: releaseId,
-              draft: false, // Remove o status de rascunho
             })
+            const draftRelease = releases.data.find(release => release.draft) // Encontra a release mais recente que é um rascunho
+            if (draftRelease) {
+              await github.repos.updateRelease({
+                owner,
+                repo,
+                release_id: draftRelease.id,
+                draft: false, // Remove o status de rascunho
+              })
+            }
 
   build-min-js:
     needs: publish_release
@@ -97,7 +102,6 @@ jobs:
               "terser": "^5.7.2"
             }
           }' > package.json
-
       - name: Install Dependencies npm
         run: npm install
 
@@ -107,10 +111,15 @@ jobs:
       - name: Create dist directory
         run: mkdir -p dist
 
+      - name: Get Tag Name
+        id: get_tag
+        run: |
+          TAG_NAME=$(curl --silent "https://api.github.com/repos/${{ github.repository }}/releases/latest" -H "Authorization: Bearer ${{ secrets.TOKEN_ACTIONS }}" | jq -r '.tag_name')
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+
       - name: Minify JavaScript
         run: |
-          TAG_NAME=$(basename $GITHUB_REF)
-          npx terser src/customComponents.js -o dist/customComponents-${TAG_NAME}.min.js
+          npx terser src/customComponents.js -o dist/customComponents-${{ env.TAG_NAME }}.min.js
 
       - name: Checkout main branch
         run: git checkout main
@@ -135,8 +144,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.RELEASE_ID }}/assets{?name,label}
-          asset_path: dist/customComponents-${{ github.ref_name }}.min.js
-          asset_name: customComponents-${{ github.ref_name }}.min.js
+          asset_path: dist/customComponents-${{ env.TAG_NAME }}.min.js
+          asset_name: customComponents-${{ env.TAG_NAME }}.min.js
           asset_content_type: application/javascript
         env:
           GITHUB_TOKEN: ${{ secrets.TOKEN_ACTIONS }}
