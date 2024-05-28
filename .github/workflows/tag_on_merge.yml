@@ -29,7 +29,7 @@ jobs:
           fi
 
       - name: Wait for tag to be published
-        run: sleep 30
+        run: sleep 45
 
       - name: Draft release
         uses: release-drafter/release-drafter@v5
@@ -40,21 +40,36 @@ jobs:
     needs: criando-tag-e-pre-release
     runs-on: ubuntu-latest
     steps:
-      - name: Publish draft as pre-release
+      - name: Verificar se a tag existe
         uses: actions/github-script@v3
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
             const { owner, repo } = context.repo
             const newTag = process.env.NEW_TAG
-            const release = await github.repos.getReleaseByTag({
-              owner,
-              repo,
-              tag: newTag,
-            })
+            let release
+            try {
+              release = await github.repos.getReleaseByTag({
+                owner,
+                repo,
+                tag: newTag,
+              })
+            } catch (error) {
+              if (error.status === 404) {
+                console.log(`Tag ${newTag} ainda não está disponível. Tentando novamente em 30 segundos...`)
+                await new Promise(resolve => setTimeout(resolve, 30000))
+                release = await github.repos.getReleaseByTag({
+                  owner,
+                  repo,
+                  tag: newTag,
+                })
+              } else {
+                throw error
+              }
+            }
 
             if (!release) {
-              console.log(`No release found for tag ${newTag}`)
+              console.log(`Nenhuma release encontrada para a tag ${newTag}`)
               return
             }
 
