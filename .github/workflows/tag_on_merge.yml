@@ -22,7 +22,7 @@ jobs:
             NEW_TAG="$PREFIX$((BASE_STRING + 1))"
             echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
             git tag $NEW_TAG ${{ github.event.pull_request.merge_commit_sha }}
-            git push origin --tags
+            git push https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} --tags
           fi
       - name: Draft release
         uses: release-drafter/release-drafter@v5
