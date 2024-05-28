@@ -28,6 +28,9 @@ jobs:
             git push --set-upstream https://x-access-token:${{ secrets.PAT }}@github.com/${{ github.repository }} --tags
           fi
 
+      - name: Wait for tag to be published
+        run: sleep 30
+
       - name: Draft release
         uses: release-drafter/release-drafter@v5
         env:
