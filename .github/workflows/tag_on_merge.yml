@@ -21,7 +21,7 @@ jobs:
           node-version: '14'
 
       - name: Install dependencies
-        working-directory: .github/scripts
+        working-directory: scripts
         run: npm install
 
   create_tag_and_draft_release:
@@ -29,7 +29,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run script
-        run: node .github/scripts/create_release.js
+        working-directory: scripts
+        run: node create_release.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -38,7 +39,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
-        run: node .github/scripts/publish_release.js
+        working-directory: scripts
+        run: node publish_release.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_ID: ${{ needs.create_tag_and_draft_release.outputs.create_release }}
@@ -57,10 +59,10 @@ jobs:
           echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
 
       - name: Minify JavaScript
-        working-directory: .github/scripts
+        working-directory: scripts
         run: |
           TAG_NAME=$(basename $GITHUB_REF)
-          npx terser ../../src/customComponents.js -o ../../dist/customComponents-${TAG_NAME}.min.js
+          npx terser ../src/customComponents.js -o ../dist/customComponents-${TAG_NAME}.min.js
 
       - name: Checkout main branch
         run: git checkout main
