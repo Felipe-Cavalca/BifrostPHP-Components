@@ -8,15 +8,16 @@ on:
 jobs:
   create_tag_and_draft_release:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 0
 
       - name: Create Draft Release
         id: create_release
-        uses: actions/github-script@v3
+        uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
@@ -52,7 +53,7 @@ jobs:
     needs: create_tag_and_draft_release
     runs-on: ubuntu-latest
     steps:
-      - uses: release-drafter/release-drafter@v5
+      - uses: release-drafter/release-drafter@v6
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -61,7 +62,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
-        uses: actions/github-script@v3
+        uses: actions/github-script@v4
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
