@@ -2,7 +2,7 @@
 name: Solicitação de melhoria
 about: Sugerir uma ideia para este projeto
 title: ''
-labels: Aprimoramento, Nova
+labels: enhancement, documentation
 assignees: ''
 
 ---
