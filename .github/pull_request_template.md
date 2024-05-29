@@ -1,15 +1,8 @@
 # Descrição da Mudança
 
+> Lembre-se de adicionar a issue que está sendo resolvida, caso exista.
+
 Descreva as alterações que você fez.
-
-> Adicione um `[x]` nas caixas que se aplicam a esta solicitação de pull request.
-
-## Tipo de mudança
-
-- [ ] Bug fix (alteração que corrige um problema)
-- [ ] Nova feature (mudança que adiciona funcionalidade)
-- [ ] Breaking change (fix ou feature que causa alteração em uma funcionalidade existente)
-- [ ] Documentação
 
 ## Checklist
 
@@ -20,3 +13,5 @@ Descreva as alterações que você fez.
 - [ ] Minhas alterações não geram novos warnings
 - [ ] Eu adicionei testes que provam que minha correção é eficaz ou que minha feature funciona
 - [ ] Testes unitários novos e existentes passam localmente com minhas alterações
+
+> Não se esqueça de adicionar as `labels` correspondente a sua PR.
