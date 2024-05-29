@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: Run script
         working-directory: .github/scripts
-        run: node create_release.js
+        run: node .github/scripts/create_release.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -40,7 +40,7 @@ jobs:
     steps:
       - name: Publish Release
         working-directory: .github/scripts
-        run: node publish_release.js
+        run: node .github/scripts/publish_release.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           RELEASE_ID: ${{ needs.create_tag_and_draft_release.outputs.create_release }}
