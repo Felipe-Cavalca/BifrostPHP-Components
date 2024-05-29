@@ -30,11 +30,11 @@ jobs:
               const prefix = lastTag.replace(baseString, '')
               const parts = baseString.split('.').map(Number)
 
-              if (labels.includes('bug') || labels.includes('document')) {
-                parts[2] += 1
-              } else if (labels.includes('enhancement')) {
+              if (labels.includes('enhancement')) {
                 parts[1] += 1
                 parts[2] = 0
+              } else if (labels.includes('bug') || labels.includes('documentation')) {
+                parts[2] += 1
               } else {
                 return
               }
