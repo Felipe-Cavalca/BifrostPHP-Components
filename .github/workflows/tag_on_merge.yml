@@ -22,15 +22,24 @@ jobs:
           script: |
             if (context.payload.pull_request.merged) {
               const { owner, repo } = context.repo
-              const lastTag = (await github.repos.listTags({
-                owner,
-                repo,
-              })).data.map(tag => tag.name).sort().pop()
+              const prNumber = context.payload.pull_request.number
+              const labels = (await github.issues.listLabelsOnIssue({ owner, repo, issue_number: prNumber })).data.map(label => label.name)
+
+              const lastTag = (await github.repos.listTags({ owner, repo })).data.map(tag => tag.name).sort().pop()
               const baseString = lastTag.match(/[\d.]+$/)[0]
               const prefix = lastTag.replace(baseString, '')
-              const parts = baseString.split('.').map(Number);
-              parts[2] += 1; // Incrementa a parte menor da versão
-              const newTag = `${prefix}${parts.join('.')}`;
+              const parts = baseString.split('.').map(Number)
+
+              if (labels.includes('bug') || labels.includes('document')) {
+                parts[2] += 1
+              } else if (labels.includes('enhancement')) {
+                parts[1] += 1
+                parts[2] = 0
+              } else {
+                return
+              }
+
+              const newTag = `${prefix}${parts.join('.')}`
               const tagRef = await github.git.createRef({
                 owner,
                 repo,
@@ -42,7 +51,7 @@ jobs:
                 repo,
                 tag_name: newTag,
                 name: newTag,
-                draft: true, // Cria a release como rascunho
+                draft: true,
                 prerelease: false,
               })
             }
