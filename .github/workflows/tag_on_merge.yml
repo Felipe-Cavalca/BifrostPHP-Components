@@ -46,14 +46,6 @@ jobs:
                 ref: `refs/tags/${newTag}`,
                 sha: context.payload.pull_request.merge_commit_sha,
               })
-              const release = await github.repos.createRelease({
-                owner,
-                repo,
-                tag_name: newTag,
-                name: newTag,
-                draft: true,
-                prerelease: false,
-              })
             }
 
   update_release_draft:
