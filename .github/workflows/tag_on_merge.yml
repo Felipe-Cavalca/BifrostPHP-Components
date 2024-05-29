@@ -29,7 +29,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Run script
-        working-directory: .github/scripts
         run: node .github/scripts/create_release.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -39,7 +38,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Publish Release
-        working-directory: .github/scripts
         run: node .github/scripts/publish_release.js
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
