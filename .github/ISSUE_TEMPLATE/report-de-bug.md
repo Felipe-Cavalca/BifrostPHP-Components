@@ -1,8 +1,8 @@
 ---
 name: Report de Bug
 about: Nos avise sobre um erro para que possamos corrigi-lo
-title: ''
-labels: Bug, Invalida
+title: 'Report de Bug:'
+labels: bug
 assignees: ''
 
 ---
