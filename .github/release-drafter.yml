@@ -1,23 +1,28 @@
-name-template: 'V-$NEXT_PATCH_VERSION'
-tag-template: 'V-$NEXT_PATCH_VERSION'
+change-template: '* $TITLE by @$AUTHOR in (#$NUMBER)'
+no-changes-template: '* No changes from last release'
+include-pre-releases: false
+sort-direction: ascending
 categories:
-  - title: 'Features'
-    label: 'feature'
-  - title: 'Bug Fixes'
-    label: 'fix'
-change-template: '- $TITLE @$AUTHOR (#$NUMBER)'
-version-resolver:
-  major:
+  - title: 'Enhancement'
+    collapse-after: 3
     labels:
-      - 'major'
-  minor:
+      - 'enhancement'
+  - title: 'Documentation'
+    collapse-after: 3
     labels:
-      - 'minor'
-  patch:
+      - 'documentation'
+  - title: 'bug fix'
+    collapse-after: 3
     labels:
-      - 'patch'
-  default: patch
-template: |
-  ## O que foi alterado:
+      - 'bug'
+  - title: 'Refactoring'
+    collapse-after: 3
+    labels:
+      - 'refactoring'
 
+template: |
+  ## What has changed since $PREVIOUS_TAG
   $CHANGES
+
+  ## Project sponsors
+  @JoaoSto

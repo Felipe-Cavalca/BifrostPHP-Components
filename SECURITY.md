@@ -1,19 +1,19 @@
-# Política de Segurança
+# Security policy
 
-## Relatando uma Vulnerabilidade
+## Reporting a Vulnerability
 
-Se você identificou uma vulnerabilidade em nossa aplicação, gostaríamos de saber para que possamos tomar medidas para corrigi-la.
+If you have identified a vulnerability in our application, we would like to know so we can take action to fix it.
 
-**Passos para relatar uma vulnerabilidade:**
+**Steps to report a vulnerability:**
 
-1. Vá para a guia "Issues" (Problemas) do repositório no GitHub.
+1. Go to the "Issues" tab of the repository on GitHub.
 
-2. Clique em "New Issue" (Novo Problema).
+2. Click "New Issue".
 
-3. Selecione o modelo "Report de Bug" (Relatório de Bug).
+3. Select the "Bug Report" template.
 
-4. Preencha todos os detalhes relevantes, incluindo uma descrição clara da vulnerabilidade, como ela pode ser reproduzida e quaisquer informações adicionais que julgar relevantes.
+4. Fill in all relevant details, including a clear description of the vulnerability, how it can be reproduced, and any additional information you deem relevant.
 
-5. Envie o relatório e nossa equipe de desenvolvimento revisará sua vulnerabilidade relatada.
+5. Submit the report and our development team will review your reported vulnerability.
 
-Agradecemos por ajudar a manter nosso projeto seguro!
+Thanks for helping keep our project safe!
