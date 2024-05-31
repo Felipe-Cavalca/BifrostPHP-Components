@@ -1,20 +1,20 @@
 # Contributing
 
-## Como contribuir
+## How to contribute
 
-1. Faça um fork deste repositório.
-2. Crie uma nova branch para suas alterações.
-3. Faça as alterações desejadas.
-4. Envie um pull request.
+1. Fork this repository.
+2. Create a new branch for your changes.
+3. Make the desired changes.
+4. Submit a pull request.
 
-## Diretrizes de contribuição
+## Contribution Guidelines
 
-- Certifique-se de seguir as melhores práticas de codificação.
-- Documente suas alterações de forma clara e concisa.
-- Teste suas alterações antes de enviar um pull request.
+- Make sure you follow coding best practices.
+- Document your changes clearly and concisely.
+- Test your changes before submitting a pull request.
 
-## Contato
+## Contact
 
-Se tiver alguma dúvida ou sugestão, entre em contato conosco através das issues do repositório.
+If you have any questions or suggestions, please contact us through the repository issues.
 
-Obrigado por contribuir!
+Thanks for contributing!

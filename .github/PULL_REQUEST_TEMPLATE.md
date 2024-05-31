@@ -1,17 +1,17 @@
-# Descrição da Mudança
+# Change Description
 
-> Lembre-se de adicionar a issue que está sendo resolvida, caso exista.
+> Remember to add the issue being resolved, if it exists.
 
-Descreva as alterações que você fez.
+Describe the changes you made.
 
-## Checklist
+## Check list
 
-- [ ] Meu código segue as diretrizes de estilo deste projeto
-- [ ] Eu fiz uma auto revisão do meu próprio código
-- [ ] Eu comentei meu código, especialmente em áreas difíceis de entender
-- [ ] Eu fiz as alterações correspondentes na documentação
-- [ ] Minhas alterações não geram novos warnings
-- [ ] Eu adicionei testes que provam que minha correção é eficaz ou que minha feature funciona
-- [ ] Testes unitários novos e existentes passam localmente com minhas alterações
+- [ ] My code follows the style guidelines of this project
+- [ ] I did a self-review of my own code
+- [ ] I commented my code, especially in areas that are difficult to understand
+- [ ] I made the corresponding changes to the documentation
+- [ ] My changes do not generate new warnings
+- [ ] I added tests that prove my fix is ​​effective or that my feature works
+- [ ] New and existing unit tests pass locally with my changes
 
-> Não se esqueça de adicionar as `labels` correspondente a sua PR.
+> Don't forget to add the `labels` corresponding to your PR.

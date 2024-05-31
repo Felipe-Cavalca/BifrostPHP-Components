@@ -10,8 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
     steps:
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -27,20 +32,38 @@ jobs:
               const labels = (await github.issues.listLabelsOnIssue({ owner, repo, issue_number: prNumber })).data.map(label => label.name)
 
               const lastTag = (await github.repos.listTags({ owner, repo })).data.map(tag => tag.name).sort().pop()
-              const baseString = lastTag.match(/[\d.]+$/)[0]
-              const prefix = lastTag.replace(baseString, '')
-              const parts = baseString.split('.').map(Number)
+              const baseString = lastTag.match(/[\d.]+-\d+/)[0]
+              const parts = baseString.split('-')[0].split('.').map(Number)
 
-              if (labels.includes('enhancement')) {
-                parts[1] += 1
+              // Extract the number from the parentheses in the last tag
+              const lastTagNumber = parseInt(lastTag.match(/-(\d+)$/)?.[1])
+              const newTagNumber = isNaN(lastTagNumber) ? 1 : lastTagNumber + 1
+
+              console.log(`Last tag: ${lastTag}`)
+              console.log(`Base string: ${baseString}`)
+              console.log(`Last tag number: ${lastTagNumber}`)
+              console.log(`New tag number: ${newTagNumber}`)
+
+              // validates if the PR has the labels 'upgrade'
+              if (labels.includes('upgrade')) {
+                parts[0] += 1
+                parts[1] = 0
                 parts[2] = 0
-              } else if (labels.includes('bug') || labels.includes('documentation')) {
-                parts[2] += 1
+              } else if (labels.includes('update')) {
+                if (labels.includes('enhancement')) {
+                  parts[1] += 1
+                  parts[2] = 0
+                } else if (labels.includes('bug') || labels.includes('documentation')) {
+                  parts[2] += 1
+                } else {
+                  return
+                }
               } else {
-                return
+                return;
               }
 
-              const newTag = `${prefix}${parts.join('.')}`
+              const newTag = `${parts.join('.')}-${newTagNumber}`
+              console.log(`New tag: ${newTag}`)
               const tagRef = await github.git.createRef({
                 owner,
                 repo,
@@ -61,6 +84,14 @@ jobs:
     needs: update_release_draft
     runs-on: ubuntu-latest
     steps:
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Publish Release
         uses: actions/github-script@v4
         with:
@@ -71,13 +102,18 @@ jobs:
               owner,
               repo,
             })
-            const draftRelease = releases.data.find(release => release.draft) // Encontra a release mais recente que é um rascunho
+
+            const draftRelease = releases.data.find(release => release.draft)
             if (draftRelease) {
+              const lastTag = (await github.repos.listTags({ owner, repo })).data.map(tag => tag.name).sort().pop()
               await github.repos.updateRelease({
                 owner,
                 repo,
                 release_id: draftRelease.id,
-                draft: false, // Remove o status de rascunho
+                tag_name: lastTag,
+                name: lastTag.trim().replace(/-/g, ' (') + ')',
+                draft: false,
+                prerelease: true,
               })
             }
 
