@@ -9,7 +9,7 @@ componentes html personalizados para facilitar o desenvolvimento de paginas web 
 
 Para instalar e utilizar os componentes HTML personalizados em seu projeto, siga os passos abaixo:
 
-1. Baixe a versão mais recente do arquivo `customComponents.js` no seguinte link: [https://github.com/Felipe-Cavalca/BifrostPHP-Components/releases/latest](https://github.com/Felipe-Cavalca/BifrostPHP-Components/releases/latest).
+1. Baixe a versão mais recente do arquivo `customComponents.js` neste [link](https://github.com/Felipe-Cavalca/BifrostPHP-Components/releases/latest).
 1. Adicione o arquivo baixado ao seu projeto.
 1. Inclua o arquivo `customComponents.js` em seu arquivo HTML usando a tag `<script>`. Por exemplo:
 
