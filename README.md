@@ -1,53 +1,56 @@
-# Components HTML
+# HTML Components
 
-componentes html personalizados para facilitar o desenvolvimento de paginas web e reduzir o código repetido
+> Documentation in Portuguese / Documentação em português:
+> [README-PT.md](README-PT.md)
 
-## Instalação
+Custom html components to facilitate web page development and reduce repeated code
 
-Para instalar e utilizar os componentes HTML personalizados em seu projeto, siga os passos abaixo:
+## Installation
 
-1. Baixe a versão mais recente do arquivo `customComponents.js` no seguinte link: [https://github.com/Felipe-Cavalca/BifrostPHP-Components/releases/latest](https://github.com/Felipe-Cavalca/BifrostPHP-Components/releases/latest).
-1. Adicione o arquivo baixado ao seu projeto.
-1. Inclua o arquivo `customComponents.js` em seu arquivo HTML usando a tag `<script>`. Por exemplo:
+To install and use custom HTML components in your project, follow the steps below:
 
-```html
-<script src="caminho/para/o/arquivo/customComponents.js"></script>
-```
-
-## Uso
-
-Por padrão, o script `customComponents.js` tenta listar os componentes a partir da URL `/components`. No entanto, se necessário, você pode alterar essa configuração padrão.
-
-### Exemplo
-
-Se você tiver um arquivo chamado `navbar.html` na pasta de componentes, você pode usar o componente personalizado correspondente em seu HTML simplesmente criando a tag `<c-navbar></c-navbar>`.
-
-Este padrão se aplica a qualquer arquivo na pasta de componentes. Para usar o componente personalizado, basta criar uma tag com o prefixo `c-` seguido pelo nome do arquivo.
-
-Por exemplo, se você tiver um arquivo `header.html`, você pode usar o componente correspondente com a tag `<c-header></c-header>`.
-
-## Configuração
-
-Você pode personalizar o caminho e o prefixo dos componentes personalizados ao incluir o script `customComponents.js` em seu arquivo HTML.
-
-Aqui está um exemplo de como você pode fazer isso:
+1. Download the latest version of the `customComponents.js` file from the following link: [https://github.com/Felipe-Cavalca/BifrostPHP-Components/releases/latest](<https://github.com/Felipe-> Cavalca/BifrostPHP-Components/releases/latest).
+1. Add the downloaded file to your project.
+1. Include the `customComponents.js` file in your HTML file using the `<script>` tag. For example:
 
 ```html
-<script path="/components" prefix="c-" src="caminho/para/o/arquivo/customComponents.js"></script>
+<script src="path/to/file/customComponents.js"></script>
 ```
 
-Neste exemplo, o atributo path define o caminho de onde o script vai listar os componentes. O atributo prefix define o prefixo que será usado para criar as tags dos componentes personalizados.
+## Usage
 
-Por exemplo, se você definir o prefixo como `v-`, você usaria a tag `<v-navbar></v-navbar>` para usar o componente navbar.html.
+By default, the `customComponents.js` script tries to list components from the URL `/components`. However, if necessary, you can change this default setting.
 
-Você pode definir o prefixo como qualquer string que desejar, desde que seja compatível com a sintaxe de tags HTML.
+### Example
 
-## Lançamentos
+If you have a file called `navbar.html` in the components folder, you can use the corresponding custom component in your HTML by simply creating the `<c-navbar></c-navbar>` tag.
 
-Sempre que um Pull Request é aprovado e mesclado, uma nova pré-lançamento é automaticamente criada pelo nosso fluxo de trabalho do GitHub Actions. Isso nos permite testar as novas alterações em um ambiente de pré-produção antes de lançá-las oficialmente.
+This pattern applies to any file in the components folder. To use the custom component, simply create a tag with the prefix `c-` followed by the file name.
 
-As versões de lançamento oficial, no entanto, são criadas manualmente. Isso nos dá a oportunidade de garantir que tudo esteja funcionando como esperado no ambiente de pré-lançamento antes de tornar as alterações disponíveis para todos os usuários.
+For example, if you have a `header.html` file, you can use the corresponding component with the `<c-header></c-header>` tag.
+
+## Settings
+
+You can customize the path and prefix of custom components by including the `customComponents.js` script in your HTML file.
+
+Here is an example of how you can do this:
+
+```html
+<script path="/components" prefix="c-" src="path/to/file/customComponents.js"></script>
+```
+
+In this example, the path attribute defines the path from where the script will list the components. The prefix attribute defines the prefix that will be used to create custom component tags.
+
+For example, if you set the prefix to `v-`, you would use the `<v-navbar></v-navbar>` tag to use the navbar.html component.
+
+You can set the prefix to any string you want, as long as it supports HTML tag syntax.
+
+## Releases
+
+Whenever a Pull Request is approved and merged, a new pre-release is automatically created by our GitHub Actions workflow. This allows us to test new changes in a pre-production environment before officially releasing them.
+
+Official release versions, however, are created manually. This gives us the opportunity to ensure everything is working as expected in the pre-release environment before making the changes available to all users.
 
 ## Sponsored by
 
-- @JoaoSto :)
+- @JoaoSto
