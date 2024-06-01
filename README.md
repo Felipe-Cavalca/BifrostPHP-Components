@@ -1,5 +1,8 @@
 # HTML Components
 
+> Documentation in Portuguese / Documentação em português:
+> [README-PT.md](README-PT.md)
+
 Custom html components to facilitate web page development and reduce repeated code
 
 ## Installation

@@ -1,5 +1,8 @@
 # Components HTML
 
+> Documentation in English / Documentação em inglês:
+> [README.md](README.md)
+
 componentes html personalizados para facilitar o desenvolvimento de paginas web e reduzir o código repetido
 
 ## Instalação
