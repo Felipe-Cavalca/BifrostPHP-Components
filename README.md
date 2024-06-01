@@ -9,7 +9,7 @@ Custom html components to facilitate web page development and reduce repeated co
 
 To install and use custom HTML components in your project, follow the steps below:
 
-1. Download the latest version of the `customComponents.js` file from the following link: [https://github.com/Felipe-Cavalca/BifrostPHP-Components/releases/latest](<https://github.com/Felipe-> Cavalca/BifrostPHP-Components/releases/latest).
+1. Download the latest version of the `customComponents.js` file from this [link](https://github.com/Felipe-> Cavalca/BifrostPHP-Components/releases/latest).
 1. Add the downloaded file to your project.
 1. Include the `customComponents.js` file in your HTML file using the `<script>` tag. For example:
 
