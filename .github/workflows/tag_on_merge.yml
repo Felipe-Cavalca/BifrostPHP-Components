@@ -46,20 +46,21 @@ jobs:
 
               // validates if the PR has the labels 'upgrade'
               if (labels.includes('upgrade')) {
+                // case the PR has the label 'upgrade' alters the first part of the tag
                 parts[0] += 1
                 parts[1] = 0
                 parts[2] = 0
-              } else if (labels.includes('update')) {
+              } else {
                 if (labels.includes('enhancement')) {
+                  // case the PR has the labels 'enhancement' alters the second part of the tag
                   parts[1] += 1
                   parts[2] = 0
                 } else if (labels.includes('bug') || labels.includes('documentation')) {
+                  // case the PR has the labels 'bug' or 'documentation' alters the third part of the tag
                   parts[2] += 1
                 } else {
                   return
                 }
-              } else {
-                return;
               }
 
               const newTag = `${parts.join('.')}-${newTagNumber}`
