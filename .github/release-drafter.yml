@@ -11,10 +11,14 @@ categories:
     collapse-after: 3
     labels:
       - 'documentation'
-  - title: 'bug fix'
+  - title: 'Bug fix'
     collapse-after: 3
     labels:
       - 'bug'
+  - title: 'Updating dependencies'
+    collapse-after: 3
+    labels:
+      - 'dependencies'
   - title: 'Refactoring'
     collapse-after: 3
     labels:

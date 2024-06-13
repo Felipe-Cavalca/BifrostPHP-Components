@@ -26,52 +26,58 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
-            if (context.payload.pull_request.merged) {
-              const { owner, repo } = context.repo
-              const prNumber = context.payload.pull_request.number
-              const labels = (await github.issues.listLabelsOnIssue({ owner, repo, issue_number: prNumber })).data.map(label => label.name)
+            // Desestruturação do objeto context.repo para obter o proprietário e o repositório
+            const { owner, repo } = context.repo
 
-              const lastTag = (await github.repos.listTags({ owner, repo })).data.map(tag => tag.name).sort().pop()
-              const baseString = lastTag.match(/[\d.]+-\d+/)[0]
-              const parts = baseString.split('-')[0].split('.').map(Number)
+            // Obtenção do número do pull request a partir do payload do contexto
+            const prNumber = context.payload.pull_request.number
 
-              // Extract the number from the parentheses in the last tag
-              const lastTagNumber = parseInt(lastTag.match(/-(\d+)$/)?.[1])
-              const newTagNumber = isNaN(lastTagNumber) ? 1 : lastTagNumber + 1
+            // Obtenção das labels do pull request atual. A função listLabelsOnIssue é chamada com o proprietário, o repositório e o número do pull request.
+            // O resultado é mapeado para obter apenas os nomes das labels.
+            const labels = (await github.issues.listLabelsOnIssue({ owner, repo, issue_number: prNumber })).data.map(label => label.name)
 
-              console.log(`Last tag: ${lastTag}`)
-              console.log(`Base string: ${baseString}`)
-              console.log(`Last tag number: ${lastTagNumber}`)
-              console.log(`New tag number: ${newTagNumber}`)
+            // Obtenção da última tag do repositório. A função listTags é chamada com o proprietário e o repositório.
+            // O resultado é mapeado para obter apenas os nomes das tags, que são então ordenados e a última é selecionada.
+            const lastTag = (await github.repos.listTags({ owner, repo })).data.map(tag => tag.name).sort().pop()
 
-              // validates if the PR has the labels 'upgrade'
-              if (labels.includes('upgrade')) {
-                // case the PR has the label 'upgrade' alters the first part of the tag
-                parts[0] += 1
-                parts[1] = 0
+            // Extração da base da última tag (parte antes do hífen) e divisão em partes (versão major, minor e patch)
+            const baseString = lastTag.match(/[\d.]+-\d+/)[0]
+            const parts = baseString.split('-')[0].split('.').map(Number)
+
+            // Extração do número da última tag (parte após o hífen) e incremento para obter o número da nova tag
+            const lastTagNumber = parseInt(lastTag.match(/-(\d+)$/)?.[1])
+            const newTagNumber = isNaN(lastTagNumber) ? 1 : lastTagNumber + 1
+
+            // Verificação das labels do pull request para determinar como a versão deve ser incrementada
+            if (labels.includes('upgrade')) {
+              // Se a label 'upgrade' estiver presente, incrementa a versão major e zera a minor e a patch
+              parts[0] += 1
+              parts[1] = 0
+              parts[2] = 0
+            } else {
+              if (labels.includes('enhancement')) {
+                // Se a label 'enhancement' estiver presente, incrementa a versão minor e zera a patch
+                parts[1] += 1
                 parts[2] = 0
+              } else if (labels.includes('bug') || labels.includes('documentation')) {
+                // Se as labels 'bug' ou 'documentation' estiverem presentes, incrementa a versão patch
+                parts[2] += 1
               } else {
-                if (labels.includes('enhancement')) {
-                  // case the PR has the labels 'enhancement' alters the second part of the tag
-                  parts[1] += 1
-                  parts[2] = 0
-                } else if (labels.includes('bug') || labels.includes('documentation')) {
-                  // case the PR has the labels 'bug' or 'documentation' alters the third part of the tag
-                  parts[2] += 1
-                } else {
-                  return
-                }
+                // Se nenhuma das labels anteriores estiver presente, o script é encerrado
+                return
               }
-
-              const newTag = `${parts.join('.')}-${newTagNumber}`
-              console.log(`New tag: ${newTag}`)
-              const tagRef = await github.git.createRef({
-                owner,
-                repo,
-                ref: `refs/tags/${newTag}`,
-                sha: context.payload.pull_request.merge_commit_sha,
-              })
             }
+
+            // Criação da nova tag a partir das partes da versão e do número da tag
+            const newTag = `${parts.join('.')}-${newTagNumber}`
+
+            // Criação da referência para a nova tag no repositório
+            const tagRef = await github.git.createRef({
+              owner,
+              repo,
+              ref: `refs/tags/${newTag}`,
+              sha: context.payload.pull_request.merge_commit_sha,
+            })
 
   update_release_draft:
     needs: create_tag_and_draft_release
@@ -98,25 +104,71 @@ jobs:
         with:
           github-token: ${{secrets.GITHUB_TOKEN}}
           script: |
+            // Desestruturação do objeto context.repo para obter o proprietário e o repositório
             const { owner, repo } = context.repo
-            const releases = await github.repos.listReleases({
-              owner,
-              repo,
-            })
 
-            const draftRelease = releases.data.find(release => release.draft)
-            if (draftRelease) {
-              const lastTag = (await github.repos.listTags({ owner, repo })).data.map(tag => tag.name).sort().pop()
-              await github.repos.updateRelease({
+            // Obtenção da lista de releases do repositório atual
+            const releases = await github.repos.listReleases({
                 owner,
                 repo,
-                release_id: draftRelease.id,
-                tag_name: lastTag,
-                name: lastTag.trim().replace(/-/g, ' (') + ')',
-                draft: false,
-                prerelease: true,
-              })
+            })
+
+            // Busca por um release que ainda está em rascunho (draft)
+            const draftRelease = releases.data.find(release => release.draft)
+
+            // Obtenção do número do pull request a partir do payload do contexto
+            const prNumber = context.payload.pull_request.number
+
+            // Obtenção das labels do pull request atual. A função listLabelsOnIssue é chamada com o proprietário, o repositório e o número do pull request.
+            // O resultado é mapeado para obter apenas os nomes das labels.
+            const labels = (await github.issues.listLabelsOnIssue({ owner, repo, issue_number: prNumber })).data.map(label => label.name)
+
+            // Se um release em rascunho for encontrado
+            if (draftRelease) {
+                // Obtenção da última tag do repositório
+                const lastTag = (await github.repos.listTags({ owner, repo })).data.map(tag => tag.name).sort().pop()
+
+                // Atualização do release em rascunho com a última tag, alterando o nome para remover hífens e substituí-los por parênteses
+                // Além disso, o release é marcado como não sendo mais um rascunho (draft: false) e como pré-release (prerelease: true)
+                await github.repos.updateRelease({
+                    owner,
+                    repo,
+                    release_id: draftRelease.id,
+                    tag_name: lastTag,
+                    name: lastTag.trim().replace(/-/g, ' (') + ')',
+                    draft: false,
+                    prerelease: !labels.includes('release'),
+                })
             }
+
+  update_branch_release:
+    needs: publish_release
+    if: contains(github.event.pull_request.labels.*.name, 'release')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: 'refs/heads/main'
+
+      - name: Create and push branch
+        run: |
+          git checkout -b ${BRANCH_NAME} || git checkout ${BRANCH_NAME}
+          git reset --hard origin/main
+          git push --force origin ${BRANCH_NAME}
+        env:
+          BRANCH_NAME: latest-release
+
+  sync_labels:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.event.pull_request.base.ref == 'main'
+    steps:
+    - uses: actions/checkout@v2
+    - uses: micnncim/action-label-syncer@v1
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        manifest: .github/labels.yml
+        prune: true
 
   build-min-js:
     needs: publish_release
