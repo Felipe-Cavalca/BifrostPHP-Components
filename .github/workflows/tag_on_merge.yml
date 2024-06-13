@@ -55,16 +55,12 @@ jobs:
               parts[1] = 0
               parts[2] = 0
             } else {
-              if (labels.includes('enhancement')) {
+              if (labels.includes('enhancement') || labels.includes('dependencies')) {
                 // Se a label 'enhancement' estiver presente, incrementa a versão minor e zera a patch
                 parts[1] += 1
                 parts[2] = 0
-              } else if (labels.includes('bug') || labels.includes('documentation')) {
-                // Se as labels 'bug' ou 'documentation' estiverem presentes, incrementa a versão patch
-                parts[2] += 1
               } else {
-                // Se nenhuma das labels anteriores estiver presente, o script é encerrado
-                return
+                parts[2] += 1
               }
             }
 
