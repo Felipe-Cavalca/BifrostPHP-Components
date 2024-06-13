@@ -211,11 +211,15 @@ jobs:
       - name: Create dist directory
         run: mkdir -p dist
 
-      - name: Get Tag Name
-        id: get_tag
-        run: |
-          TAG_NAME=$(curl --silent "https://api.github.com/repos/${{ github.repository }}/releases?per_page=1" -H "Authorization: Bearer ${{ secrets.TOKEN_ACTIONS }}" | jq -r '[.[] | select(.prerelease == true)][0].tag_name')
-          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+      - name: Get Last Tag
+        id: get_last_tag
+        uses: actions/github-script@v4
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { owner, repo } = context.repo;
+            const lastTag = (await github.repos.listTags({ owner, repo })).data.map(tag => tag.name).sort().pop();
+            console.log(`::set-env name=TAG_NAME::${lastTag}`);
 
       - name: Minify JavaScript
         run: |
