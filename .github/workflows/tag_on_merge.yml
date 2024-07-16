@@ -140,7 +140,7 @@ jobs:
                     tag_name: lastTag,
                     name: lastTag.trim().replace(/-/g, ' (') + ')',
                     draft: false,
-                    prerelease: labels.includes('release'),
+                    prerelease: !labels.includes('release'),
                 });
             }
 
