@@ -1,9 +1,10 @@
 # HTML Components
 
-[![Repo](https://img.shields.io/badge/Repo-Base-blue)](./)
+[![Repo](https://img.shields.io/badge/Bifrost-Components-blue)](./)
 
-[![Repo](https://img.shields.io/badge/Language-git-green)](./)
-[![Repo](https://img.shields.io/badge/Language-sh-green)](./)
+[![Linguagem](https://img.shields.io/badge/JS-yellow)](./)
+[![Linguagem](https://img.shields.io/badge/HTML-red)](./)
+[![Linguagem](https://img.shields.io/badge/CSS-blue)](./)
 
 > Documentation in Portuguese / Documentação em português:
 > [README-PT.md](README-PT.md)
