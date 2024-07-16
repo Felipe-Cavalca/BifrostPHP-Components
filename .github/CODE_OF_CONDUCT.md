@@ -1,7 +1,7 @@
 # Code of Conduct
 
-[Código de Conduta do Projeto (Português)](./CODE_OF_CONDUCT.md#Português)
-[Código de Conduta do Projeto (English)](./CODE_OF_CONDUCT.md#English)
+[![link-CODE_OF_CONDUCT-inglês](https://img.shields.io/badge/CODE_OF_CONDUCT-English/Inglês-red)](./CODE_OF_CONDUCT.md#english)
+[![link-CODE_OF_CONDUCT-Portugês](https://img.shields.io/badge/CODE_OF_CONDUCT-Portuguese/Portugês-green)](./CODE_OF_CONDUCT.md#português)
 
 ## English
 

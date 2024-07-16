@@ -1,7 +1,7 @@
 # Security policy
 
-[Security (Português)](./SECURITY.md#Português)
-[Security (English)](./SECURITY.md#English)
+[![link-SECURITY-inglês](https://img.shields.io/badge/SECURITY-English/Inglês-red)](./SECURITY.md#english)
+[![link-SECURITY-Portugês](https://img.shields.io/badge/SECURITY-Portuguese/Portugês-green)](./SECURITY.md#português)
 
 ## English
 

@@ -2,14 +2,15 @@
 
 [![Repo](https://img.shields.io/badge/Bifrost-Components-blue)](./)
 
+[![GIT](https://img.shields.io/badge/GIT-orange)](./)
+[![MD](https://img.shields.io/badge/MD-darkblue)](./)
+[![YML](https://img.shields.io/badge/YML-darkblue)](./)
 [![Linguagem](https://img.shields.io/badge/JS-yellow)](./)
 [![Linguagem](https://img.shields.io/badge/HTML-red)](./)
 [![Linguagem](https://img.shields.io/badge/CSS-blue)](./)
 
-> Documentation in Portuguese / Documentação em português:
-> [README-PT.md](README-PT.md)
-
-Base repository for my project to maintain standardization of licenses, inssues, actions, etc.
+[![link-readme-inglês](https://img.shields.io/badge/README-English/Inglês-red)](./README.md)
+[![link-readme-Portugês](https://img.shields.io/badge/README-Portuguese/Portugês-green)](./README-PT.md)
 
 Custom html components to facilitate web page development and reduce repeated code
 
