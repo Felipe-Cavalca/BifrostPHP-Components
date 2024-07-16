@@ -1,8 +1,9 @@
 {
     "version": "2.0.0",
     "tasks": [
+        // Scrips base
         {
-            "label": "mesclar base com a branch atual",
+            "label": "mesclar base/last-release com a branch atual",
             "type": "shell",
             "problemMatcher": [],
             "windows": {

@@ -1,7 +1,15 @@
 # HTML Components
 
+[![Repo](https://img.shields.io/badge/Bifrost-Components-blue)](./)
+
+[![Linguagem](https://img.shields.io/badge/JS-yellow)](./)
+[![Linguagem](https://img.shields.io/badge/HTML-red)](./)
+[![Linguagem](https://img.shields.io/badge/CSS-blue)](./)
+
 > Documentation in Portuguese / Documentação em português:
 > [README-PT.md](README-PT.md)
+
+Base repository for my project to maintain standardization of licenses, inssues, actions, etc.
 
 Custom html components to facilitate web page development and reduce repeated code
 
