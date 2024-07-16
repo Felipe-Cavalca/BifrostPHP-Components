@@ -1,7 +1,7 @@
 # Contributing
 
-[Contributing (Português)](./CONTRIBUTING.md#Português)
-[Contributing (English)](./CONTRIBUTING.md#English)
+[![link-CONTRIBUTING-inglês](https://img.shields.io/badge/CONTRIBUTING-English/Inglês-red)](./CONTRIBUTING.md#english)
+[![link-CONTRIBUTING-Portugês](https://img.shields.io/badge/CONTRIBUTING-Portuguese/Portugês-green)](./CONTRIBUTING.md#português)
 
 ## English
 
