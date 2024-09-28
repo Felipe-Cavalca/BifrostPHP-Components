@@ -54,6 +54,10 @@ Por exemplo, se você definir o prefixo como `v-`, você usaria a tag `<v-navbar
 
 Você pode definir o prefixo como qualquer string que desejar, desde que seja compatível com a sintaxe de tags HTML.
 
+## Atenção
+
+Os componentes personalizados são carregados usando shadow DOM. Isso significa que o CSS e o JavaScript dentro dos componentes não afetarão o restante da página. No entanto, isso também significa que o CSS e o JavaScript fora dos componentes não afetarão o conteúdo dentro dos componentes.
+
 ## Lançamentos
 
 Sempre que um Pull Request é aprovado e mesclado, uma nova pré-lançamento é automaticamente criada pelo nosso fluxo de trabalho do GitHub Actions. Isso nos permite testar as novas alterações em um ambiente de pré-produção antes de lançá-las oficialmente.

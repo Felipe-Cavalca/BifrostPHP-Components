@@ -54,6 +54,10 @@ For example, if you set the prefix to `v-`, you would use the `<v-navbar></v-nav
 
 You can set the prefix to any string you want, as long as it supports HTML tag syntax.
 
+## Attention
+
+Custom components are loaded using shadow DOM. This means that the CSS and JavaScript inside the components will not affect the rest of the page. However, this also means that the CSS and JavaScript outside the components will not affect the content inside the components.
+
 ## Releases
 
 Whenever a Pull Request is approved and merged, a new pre-release is automatically created by our GitHub Actions workflow. This allows us to test new changes in a pre-production environment before officially releasing them.
