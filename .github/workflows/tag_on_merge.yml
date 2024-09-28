@@ -232,6 +232,9 @@ jobs:
       - name: Checkout main branch
         run: git checkout main
 
+      - name: Pull latest changes
+        run: git pull origin main
+
       - name: Commit and Push
         run: |
           git config --local user.email "action@github.com"
