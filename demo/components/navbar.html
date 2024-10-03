@@ -16,9 +16,9 @@
 </div>
 
 <script>
-    function initializeComponentScript(shadowRoot) {
+    function initializeComponentScript(self) {
         console.log('Script do componente navbar executado');
-        const divB = shadowRoot.querySelector('div.b');
+        const divB = self.shadowRoot.querySelector('div.b');
         console.log(divB);
     }
 </script>

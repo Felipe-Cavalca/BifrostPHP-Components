@@ -52,7 +52,7 @@ class customComponents {
 
             #prepareScripts() {
                 const scripts = this.shadowRoot.querySelectorAll('script');
-                if(scripts.length <= 1) return;
+                if(scripts.length < 1) return;
                 scripts.forEach(script => {
                     const newScript = document.createElement('script');
                     newScript.textContent = script.textContent;
@@ -61,7 +61,7 @@ class customComponents {
                 });
                 // Executa a função do script no contexto do componente
                 if (typeof initializeComponentScript === 'function') {
-                    initializeComponentScript(this.shadowRoot);
+                    initializeComponentScript(this);
                 }
             }
         }
