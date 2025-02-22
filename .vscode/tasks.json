@@ -7,10 +7,10 @@
             "type": "shell",
             "problemMatcher": [],
             "windows": {
-                "command": "if (git remote | findstr 'base') { git remote set-url base https://github.com/Felipe-Cavalca/base-repo.git } else { git remote add base https://github.com/Felipe-Cavalca/base-repo.git }; git fetch base; git merge base/latest-release"
+                "command": "if (git remote | findstr 'base') { git remote set-url base https://github.com/Felipe-Cavalca/base-repo.git } else { git remote add base https://github.com/Felipe-Cavalca/base-repo.git }; git fetch base; git merge base/latest-release --allow-unrelated-histories"
             },
             "linux": {
-                "command": "git remote | grep base && git remote set-url base https://github.com/Felipe-Cavalca/base-repo.git || git remote add base https://github.com/Felipe-Cavalca/base-repo.git; git fetch base && git merge base/latest-release"
+                "command": "git remote | grep base && git remote set-url base https://github.com/Felipe-Cavalca/base-repo.git || git remote add base https://github.com/Felipe-Cavalca/base-repo.git; git fetch base && git merge base/latest-release --allow-unrelated-histories"
             }
         }
     ]
